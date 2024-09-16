@@ -60,32 +60,21 @@ public class InventoryDAOTest {
    * Test Create method 1:
    * Check for same names
    * Check for right # of items
+   * Check for different ID
    */
   @Test
-  public void create1() {
+  public void create() {
     Inventory item1 = new Inventory();
     Inventory item2 = new Inventory();
     item1.setName(NAME1);
     item2.setName(NAME2);
+    item1.setId(ID);
     this.inventoryDAO.create(item1);
     this.inventoryDAO.create(item2);
     List<Inventory> currInventory = this.inventoryDAO.findAll();
     Assert.assertEquals(NAME1, currInventory.get(0).getName());
     Assert.assertEquals(NAME2, currInventory.get(1).getName());
-    Assert.assertEquals(2, this.inventoryDAO.findAll().size());
-  }
-
-  /**
-   * Test Create method 2:
-   * Check for different ID.
-   */
-  @Test
-  public void create2() {
-    Inventory item = new Inventory();
-    item.setName(NAME);
-    item.setId(ID);
-    this.inventoryDAO.create(item);
-    List<Inventory> currInventory = this.inventoryDAO.findAll();
     Assert.assertNotEquals(ID, currInventory.get(0).getId());
+    Assert.assertEquals(2, this.inventoryDAO.findAll().size());
   }
 }
