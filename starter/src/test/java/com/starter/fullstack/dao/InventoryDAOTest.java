@@ -15,7 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
-// Test Inventory DAO.
+/**
+ * Test Inventory DAO.
+ */
 @DataMongoTest
 @RunWith(SpringRunner.class)
 public class InventoryDAOTest {
@@ -26,7 +28,10 @@ public class InventoryDAOTest {
   private MongoTemplate mongoTemplate;
   private InventoryDAO inventoryDAO;
   private static final String NAME = "Amber";
+  private static final String NAME1 = "item1";
+  private static final String NAME2 = "item2";
   private static final String PRODUCT_TYPE = "hops";
+  private static final String ID = "123";
 
   @Before
   public void setup() {
@@ -38,7 +43,9 @@ public class InventoryDAOTest {
     this.mongoTemplate.dropCollection(Inventory.class);
   }
 
-  // Test Find All method.
+  /**
+   * Test Find All method.
+   */
   @Test
   public void findAll() {
     Inventory inventory = new Inventory();
@@ -49,40 +56,36 @@ public class InventoryDAOTest {
     Assert.assertFalse(actualInventory.isEmpty());
   }
 
+  /**
+   * Test Create method 1:
+   * Check for same names
+   * Check for right # of items
+   */
   @Test
-  // Test for Create -> check # of items
   public void create1() {
-    // Creating two new items to "create"
     Inventory item1 = new Inventory();
     Inventory item2 = new Inventory();
-    item1.setName("item1");
-    item2.setName("item2");
-    item1.setProductType(PRODUCT_TYPE);
-    item2.setProductType(PRODUCT_TYPE);
-    // Call the function you want to test
+    item1.setName(NAME1);
+    item2.setName(NAME2);
     this.inventoryDAO.create(item1);
     this.inventoryDAO.create(item2);
-    // Make sure that the objects in Inventory == 2
-    Assert.assertEquals(2, this.mongoTemplate.findAll(Inventory.class).size());
-  }
-
-  @Test
-  // Test for Create -> check names of item
-  public void create2() {
-    // Creating two new items to "create"
-    Inventory item1 = new Inventory();
-    Inventory item2 = new Inventory();
-    item1.setName("item1");
-    item2.setName("item2");
-    item1.setProductType(PRODUCT_TYPE);
-    item2.setProductType(PRODUCT_TYPE);
-    // Call the function you want to test
-    this.inventoryDAO.create(item1);
-    this.inventoryDAO.create(item2);
-    // Make sure that the names of items match!
     List<Inventory> currInventory = this.inventoryDAO.findAll();
-    Assert.assertEquals("item1", currInventory.get(0).getName());
-    Assert.assertEquals("item2", currInventory.get(1).getName());
+    Assert.assertEquals(NAME1, currInventory.get(0).getName());
+    Assert.assertEquals(NAME2, currInventory.get(1).getName());
+    Assert.assertEquals(2, this.inventoryDAO.findAll().size());
   }
 
+  /**
+   * Test Create method 2:
+   * Check for different ID.
+   */
+  @Test
+  public void create2() {
+    Inventory item = new Inventory();
+    item.setName(NAME);
+    item.setId(ID);
+    this.inventoryDAO.create(item);
+    List<Inventory> currInventory = this.inventoryDAO.findAll();
+    Assert.assertNotEquals(ID, currInventory.get(0).getId());
+  }
 }
