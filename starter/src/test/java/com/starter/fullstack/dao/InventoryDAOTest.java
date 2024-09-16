@@ -15,9 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
-/**
- * Test Inventory DAO.
- */
+// Test Inventory DAO.
 @DataMongoTest
 @RunWith(SpringRunner.class)
 public class InventoryDAOTest {
@@ -40,9 +38,7 @@ public class InventoryDAOTest {
     this.mongoTemplate.dropCollection(Inventory.class);
   }
 
-  /**
-   * Test Find All method.
-   */
+  // Test Find All method.
   @Test
   public void findAll() {
     Inventory inventory = new Inventory();
@@ -52,4 +48,41 @@ public class InventoryDAOTest {
     List<Inventory> actualInventory = this.inventoryDAO.findAll();
     Assert.assertFalse(actualInventory.isEmpty());
   }
+
+  @Test
+  // Test for Create -> check # of items
+  public void create() {
+    // Creating two new items to "create"
+    Inventory item1 = new Inventory();
+    Inventory item2 = new Inventory();
+    item1.setName("item1");
+    item2.setName("item2");
+    item1.setProductType(PRODUCT_TYPE);
+    item2.setProductType(PRODUCT_TYPE);
+    // Call the function you want to test
+    this.inventoryDAO.create(item1);
+    this.inventoryDAO.create(item2);
+    // Make sure that the objects in Inventory == 2
+    Assert.assertEquals(2, this.mongoTemplate.findAll(Inventory.class).size());
+  }
+
+  @Test
+  // Test for Create -> check names of item
+  public void create2() {
+    // Creating two new items to "create"
+    Inventory item1 = new Inventory();
+    Inventory item2 = new Inventory();
+    item1.setName("item1");
+    item2.setName("item2");
+    item1.setProductType(PRODUCT_TYPE);
+    item2.setProductType(PRODUCT_TYPE);
+    // Call the function you want to test
+    this.inventoryDAO.create(item1);
+    this.inventoryDAO.create(item2);
+    // Make sure that the objects in Inventory == 2
+    List<Inventory> currInventory = this.inventoryDAO.findAll();
+    Assert.assertEquals("item1", currInventory.get(0).getName());
+    Assert.assertEquals("item2", currInventory.get(1).getName());
+  }
+
 }

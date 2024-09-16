@@ -1,5 +1,6 @@
+// Package Declaration: specifies where InventoryDAO is located
 package com.starter.fullstack.dao;
-
+// Imports
 import com.starter.fullstack.api.Inventory;
 import java.util.List;
 import java.util.Optional;
@@ -10,49 +11,46 @@ import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.IndexOperations;
 import org.springframework.util.Assert;
 
-/**
- * Inventory DAO
- */
+// Inventory DAO
 public class InventoryDAO {
   private final MongoTemplate mongoTemplate;
   private static final String NAME = "name";
   private static final String PRODUCT_TYPE = "productType";
 
-  /**
-   * Default Constructor.
-   * @param mongoTemplate MongoTemplate.
-   */
+  // Default Constructor
+  // Initializes DAO with the MongoTemplate instance
   public InventoryDAO(MongoTemplate mongoTemplate) {
     Assert.notNull(mongoTemplate, "MongoTemplate must not be null.");
     this.mongoTemplate = mongoTemplate;
   }
 
-  /**
-   * Constructor to build indexes for rate blackout object
-   */
-  @PostConstruct
+  // Constructor to build indexes for rate blackout object
+  @PostConstruct 
+  // Indicates that the method should be called after properties
+  // have been set
   public void setupIndexes() {
     IndexOperations indexOps = this.mongoTemplate.indexOps(Inventory.class);
     indexOps.ensureIndex(new Index(NAME, Sort.Direction.ASC));
     indexOps.ensureIndex(new Index(PRODUCT_TYPE, Sort.Direction.ASC));
   }
 
-  /**
-   * Find All Inventory.
-   * @return List of found Inventory.
-   */
+  // Find All Inventory.
+  // @return List of found Inventory.
   public List<Inventory> findAll() {
     return this.mongoTemplate.findAll(Inventory.class);
   }
 
-  /**
-   * Save Inventory.
-   * @param inventory Inventory to Save/Update.
-   * @return Created/Updated Inventory.
-   */
+  // Save Inventory.
+  // @param inventory Inventory to Save/Update.
+  // @return Created/Updated Inventory.
   public Inventory create(Inventory inventory) {
-    // TODO
-    return null;
+    // Taken from Default Constructor
+    Assert.notNull(inventory, "Inventory must not be null.");
+    inventory.setId(null);
+    // Syntax taken from both Constructor & setupIndexes()
+    Inventory myInventory = this.mongoTemplate.save(inventory);
+    // Returning the created/updated inventory
+    return myInventory;
   }
 
   /**
