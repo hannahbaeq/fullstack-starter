@@ -51,7 +51,7 @@ public class InventoryDAOTest {
 
   @Test
   // Test for Create -> check # of items
-  public void create() {
+  public void create1() {
     // Creating two new items to "create"
     Inventory item1 = new Inventory();
     Inventory item2 = new Inventory();
@@ -79,7 +79,7 @@ public class InventoryDAOTest {
     // Call the function you want to test
     this.inventoryDAO.create(item1);
     this.inventoryDAO.create(item2);
-    // Make sure that the objects in Inventory == 2
+    // Make sure that the names of items match!
     List<Inventory> currInventory = this.inventoryDAO.findAll();
     Assert.assertEquals("item1", currInventory.get(0).getName());
     Assert.assertEquals("item2", currInventory.get(1).getName());
