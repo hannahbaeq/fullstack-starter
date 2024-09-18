@@ -57,7 +57,7 @@ public class InventoryDAOTest {
   }
 
   /**
-   * Test Create method 1:
+   * Test Create method:
    * Check for same names
    * Check for right # of items
    * Check for different ID
@@ -76,5 +76,29 @@ public class InventoryDAOTest {
     Assert.assertEquals(NAME2, currInventory.get(1).getName());
     Assert.assertNotEquals(ID, currInventory.get(0).getId());
     Assert.assertEquals(2, this.inventoryDAO.findAll().size());
+  }
+
+  /**
+   * Test Delete method:
+   */
+  @Test
+  public void delete() {
+    Inventory item1 = new Inventory();
+    Inventory item2 = new Inventory();
+    item1.setName(NAME1);
+    item2.setName(NAME2);
+    item1.setId(ID);
+    this.inventoryDAO.create(item1);
+    this.inventoryDAO.create(item2);
+    List<Inventory> currInventory = this.inventoryDAO.findAll();
+    Assert.assertEquals(NAME1, currInventory.get(0).getName());
+    Assert.assertEquals(NAME2, currInventory.get(1).getName());
+    Assert.assertNotEquals(ID, currInventory.get(0).getId());
+    String id = currInventory.get(0).getId();
+    this.inventoryDAO.delete(id);
+    Assert.assertEquals(1, this.inventoryDAO.findAll().size());
+    List<Inventory> newInventory = this.inventoryDAO.findAll();
+    Assert.assertNotEquals(id, newInventory.get(0).getId());
+    Assert.assertTrue(this.inventoryDAO.delete(ID).isEmpty());
   }
 }
