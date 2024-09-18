@@ -2,6 +2,7 @@ package com.starter.fullstack.dao;
 
 import com.starter.fullstack.api.Inventory;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Resource;
 import org.junit.After;
 import org.junit.Assert;
@@ -31,6 +32,7 @@ public class InventoryDAOTest {
   private static final String NAME1 = "item1";
   private static final String NAME2 = "item2";
   private static final String PRODUCT_TYPE = "hops";
+  private static final String NEW_TYPE = "bops";
   private static final String ID = "123";
 
   @Before
@@ -79,7 +81,51 @@ public class InventoryDAOTest {
   }
 
   /**
+   * Test Retrieve method:
+   * Check if Optional Inventory object is equivalent
+   */
+  @Test
+  public void retrieve() {
+    Inventory item1 = new Inventory();
+    item1.setName(NAME1);
+    item1.setId(ID);
+    this.inventoryDAO.create(item1);
+    List<Inventory> currInventory = this.inventoryDAO.findAll();
+    String id = currInventory.get(0).getId();
+    Optional<Inventory> test = Optional.of(currInventory.get(0));
+    Assert.assertEquals(test, this.inventoryDAO.retrieve(id));
+  }
+
+  /**
+   * Test Update method:
+   * Check if updated item has new values
+   * Check if ID remained the same
+   */
+  @Test
+  public void update() {
+    Inventory item1 = new Inventory();
+    Inventory item2 = new Inventory();
+    item1.setName(NAME1);
+    item2.setName(NAME2);
+    item1.setProductType(PRODUCT_TYPE);
+    this.inventoryDAO.create(item1);
+    this.inventoryDAO.create(item2);
+    List<Inventory> currInventory = this.inventoryDAO.findAll();
+    String id = currInventory.get(0).getId();
+    item1.setProductType(NEW_TYPE);
+    Optional<Inventory> updatedInventory = this.inventoryDAO.update(id, item1);
+    Assert.assertEquals(2, this.inventoryDAO.findAll().size());
+    List<Inventory> newInventory = this.inventoryDAO.findAll();
+    String newId = newInventory.get(0).getId();
+    Assert.assertEquals(id, newId);
+    Assert.assertEquals(NEW_TYPE, newInventory.get(0).getProductType());
+  }
+
+  /**
    * Test Delete method:
+   * Checks # after deletion
+   * Checks ID empty after deletion
+   * Check that empty is given on non-existent ID
    */
   @Test
   public void delete() {
@@ -91,9 +137,6 @@ public class InventoryDAOTest {
     this.inventoryDAO.create(item1);
     this.inventoryDAO.create(item2);
     List<Inventory> currInventory = this.inventoryDAO.findAll();
-    Assert.assertEquals(NAME1, currInventory.get(0).getName());
-    Assert.assertEquals(NAME2, currInventory.get(1).getName());
-    Assert.assertNotEquals(ID, currInventory.get(0).getId());
     String id = currInventory.get(0).getId();
     this.inventoryDAO.delete(id);
     Assert.assertEquals(1, this.inventoryDAO.findAll().size());

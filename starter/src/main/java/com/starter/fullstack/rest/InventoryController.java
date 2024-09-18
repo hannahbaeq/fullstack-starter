@@ -45,6 +45,27 @@ public class InventoryController {
   }
 
   /**
+   * Retrieve Products.
+   * @param id id
+   * @return Optional Inventory
+   */
+  @GetMapping("/retrieve")
+  public Optional<Inventory> retrieveInventory(@Valid @RequestBody String id) {
+    return this.inventoryDAO.retrieve(id);
+  }
+
+  /**
+   * Update Products.
+   * @param id id
+   * @param inventory inventory
+   * @return Optional Inventory
+   */
+  @PostMapping("/update")
+  public Optional<Inventory> updateInventory(@Valid @RequestParam String id, @RequestBody Inventory inventory) {
+    return this.inventoryDAO.update(id, inventory);
+  }
+
+  /**
    * Delete Products by ID.
    * @param id id
    * @return Optional Inventory
