@@ -96,9 +96,9 @@ public class InventoryControllerTest {
     this.mockMvc.perform(delete("/inventory")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("[\"" + this.inventory.getId() + "\"]"))
+                    .content(this.inventory.getId()))
             .andExpect(status().isOk());
 
-    Assert.assertEquals(1, this.mongoTemplate.findAll(Inventory.class).size());
+    Assert.assertEquals(0, this.mongoTemplate.findAll(Inventory.class).size());
   }
 }
