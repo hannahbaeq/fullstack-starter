@@ -2,6 +2,8 @@ package com.starter.fullstack.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starter.fullstack.api.Inventory;
+import java.util.List;
+import java.util.Optional;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,6 +43,8 @@ public class InventoryControllerTest {
   private static final String ID1 = "ID";
   private static final String ID2 = "OTHER ID";
   private static final String TYPE = "TYPE";
+  private static final String NEW_TYPE = "NEW TYPE";
+  private static final String PARAM_ID = "id";
 
   @Before
   public void setup() throws Throwable {
@@ -85,6 +89,45 @@ public class InventoryControllerTest {
       .andExpect(status().isOk());
     
     Assert.assertEquals(2, this.mongoTemplate.findAll(Inventory.class).size());
+  }
+
+  /**
+   * Test retrieve endpoint.
+   * @throws Throwable see MockMvc
+   */
+  @Test
+  public void retrieveTest() throws Throwable {
+    List<Inventory> currInventory = this.mongoTemplate.findAll(Inventory.class);
+    String id = currInventory.get(0).getId();
+
+    Optional<Inventory> item = Optional.of(currInventory.get(0));
+    this.mockMvc.perform(get("/inventory/retrieve")
+            .accept(MediaType.APPLICATION_JSON)
+            .content(id))
+            .andExpect(status().isOk());
+  }
+
+  /**
+   * Test update endpoint.
+   * @throws Throwable see MockMvc
+   */
+  @Test
+  public void updateTest() throws Throwable {
+    List<Inventory> currInventory = this.mongoTemplate.findAll(Inventory.class);
+    String id = currInventory.get(0).getId();
+    currInventory.get(0).setProductType(NEW_TYPE);
+
+    this.mockMvc.perform(post("/inventory/update")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param(PARAM_ID, id)
+                    .content(this.objectMapper.writeValueAsString(currInventory.get(0))))
+            .andExpect(status().isOk());
+
+    List<Inventory> newInventory = this.mongoTemplate.findAll(Inventory.class);
+    String newId = newInventory.get(0).getId();
+    Assert.assertEquals(NEW_TYPE, newInventory.get(0).getProductType());
+    Assert.assertEquals(id, newId);
   }
 
   /**

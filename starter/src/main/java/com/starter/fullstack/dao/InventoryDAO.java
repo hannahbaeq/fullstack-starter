@@ -63,7 +63,11 @@ public class InventoryDAO {
    * @return Found Inventory.
    */
   public Optional<Inventory> retrieve(String id) {
-    return Optional.empty();
+    Inventory curr = this.mongoTemplate.findById(id, Inventory.class);
+    if (curr == null) {
+      return Optional.empty();
+    }
+    return Optional.of(curr);
   }
 
   /**
@@ -73,8 +77,12 @@ public class InventoryDAO {
    * @return Updated Inventory.
    */
   public Optional<Inventory> update(String id, Inventory inventory) {
-    // TODO
-    return Optional.empty();
+    Inventory curr = this.mongoTemplate.findById(id, Inventory.class);
+    if (curr == null) {
+      return Optional.empty();
+    }
+    Inventory currInventory = this.mongoTemplate.save(inventory);
+    return Optional.of(currInventory);
   }
 
   /**
