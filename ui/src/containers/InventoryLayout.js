@@ -51,7 +51,7 @@ const InventoryLayout = (props) => {
 
   const inventory = useSelector(state => state.inventory.all)
   const isFetched = useSelector(state => state.inventory.fetched && state.products.fetched)
-  const removeInventory = useCallback(id => { dispatch(inventoryDuck.removeInventory(id)) }, [dispatch])
+  const removeInventory = useCallback(ids => { dispatch(inventoryDuck.removeInventory(ids)) }, [dispatch])
   const saveInventory = useCallback(inventory => { dispatch(inventoryDuck.saveInventory(inventory)) }, [dispatch])
 
   useEffect(() => {
@@ -72,9 +72,11 @@ const InventoryLayout = (props) => {
   const toggleCreate = () => {
     setCreateOpen(true)
   }
+
   const toggleEdit = () => {
     setEditOpen(true)
   }
+
   const toggleDelete = () => {
     setDeleteOpen(true)
   }
@@ -84,7 +86,7 @@ const InventoryLayout = (props) => {
     setDeleteOpen(false)
     setEditOpen(false)
     if (resetChecked) {
-      setChecked([])
+      setSelected([])
     }
   }
 
@@ -103,18 +105,6 @@ const InventoryLayout = (props) => {
     setSelected([])
   }
 
-  const [checked, setChecked] = React.useState([])
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-    console.log(checked)
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-    setChecked(newChecked)
-  }
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id)
     let newSelected = []
@@ -131,7 +121,6 @@ const InventoryLayout = (props) => {
       )
     }
     setSelected(newSelected)
-    console.log(selected)
   }
 
   const isSelected = (id) => selected.indexOf(id) !== -1
@@ -197,18 +186,10 @@ const InventoryLayout = (props) => {
           handleInventory={saveInventory}
           initialValues={{}}
         />
-        <InventoryFormModal
-          title='Edit'
-          formName='inventoryEdit'
-          isDialogOpen={isEditOpen}
-          handleDialog={toggleModals}
-          handleInventory={saveInventory}
-          initialValues={checked[0]}
-        />
         <InventoryDeleteModal
           isDialogOpen={isDeleteOpen}
-          handleDelete={removeInventory}
           handleDialog={toggleModals}
+          handleDelete={removeInventory}
           initialValues={selected.map(inv => inv)}
         />
       </Grid>

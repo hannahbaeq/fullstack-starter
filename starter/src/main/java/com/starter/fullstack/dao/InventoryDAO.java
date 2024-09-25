@@ -87,10 +87,11 @@ public class InventoryDAO {
 
   /**
    * Delete Inventory By Id.
-   * @param id Id of Inventory.
+   * @param id id of Inventory.
    * @return Deleted Inventory.
    */
   public Optional<Inventory> delete(String id) {
+    Assert.notNull(id, "Id must not be null");
     Query query = new Query(Criteria.where("id").is(id));
     Inventory curr = this.mongoTemplate.findAndRemove(query, Inventory.class);
     if (curr == null) {

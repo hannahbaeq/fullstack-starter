@@ -35,17 +35,17 @@ export const saveInventory = createAction(actions.INVENTORY_SAVE, (inventory) =>
     })
 )
 
-export const removeInventory = createAction(actions.INVENTORY_DELETE, (id) =>
+export const removeInventory = createAction(actions.INVENTORY_DELETE, (ids) =>
   (dispatch, getState, config) => axios
-    .delete(`${config.restAPIUrl}/inventory`, { data: id })
-    .then((suc) => {
-      const invs = []
-      getState().inventory.all.forEach(inv => {
-        if (!id.includes(inv.id)) {
-          invs.push(inv)
+    .delete(`${config.restAPIUrl}/inventory`, { data: ids }) // Put the id list into the InventoryController
+    .then((suc) => { // On success,
+      const invs = [] // Create a list
+      getState().inventory.all.forEach(inv => { // For every inventory
+        if (!ids.includes(inv.id)) { // If the current ID is not in the deleted list,
+          invs.push(inv) // Add the inventory item to the list
         }
       })
-      dispatch(refreshInventory(invs))
+      dispatch(refreshInventory(invs)) // Refresh using the new list
     })
 )
 

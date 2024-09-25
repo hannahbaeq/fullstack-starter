@@ -2,6 +2,7 @@ package com.starter.fullstack.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starter.fullstack.api.Inventory;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.After;
@@ -136,10 +137,13 @@ public class InventoryControllerTest {
    */
   @Test
   public void deleteTest() throws Throwable {
+    List<String> ids = new ArrayList<>();
+    ids.add(this.inventory.getId());
+
     this.mockMvc.perform(delete("/inventory")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.inventory.getId()))
+                    .content(this.objectMapper.writeValueAsString(ids)))
             .andExpect(status().isOk());
 
     Assert.assertEquals(0, this.mongoTemplate.findAll(Inventory.class).size());
