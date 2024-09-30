@@ -63,6 +63,7 @@ public class InventoryController {
    */
   @PostMapping("/update")
   public Optional<Inventory> updateInventory(@Valid @RequestParam String id, @RequestBody Inventory inventory) {
+    Assert.notNull(id, "NOOOOOO");
     return this.inventoryDAO.update(id, inventory);
   }
 
