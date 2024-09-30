@@ -40,10 +40,9 @@ class InventoryFormModal extends React.Component {
         <Formik
           initialValues={initialValues}
           validationSchema={validate}
-          onSubmit={values => { console.log(values)
+          onSubmit={values => {
             const instantDate = new Date(values.bestBeforeDate)
-            values.bestBeforeDate = instantDate.toISOString()
-            handleInventory(values)
+            handleInventory({ ...values, bestBeforeDate: instantDate.toISOString() })
             handleDialog(true)
           }}>
           {helpers =>
