@@ -67,7 +67,6 @@ const ProductLayout = (props) => {
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value)
     const newChecked = [...checked]
-
     if (currentIndex === -1) {
       newChecked.push(value)
     } else {

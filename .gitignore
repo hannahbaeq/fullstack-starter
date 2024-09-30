@@ -447,3 +447,9 @@ gradle-app.setting
 yarn.lock
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,intellij,gradle,maven,java,node,visualstudiocode,eclipse,yarn
+starter/package-lock.json
+ui/package-lock.json
+ui/package.json
+ui/package.json
+ui/package.json
+ui/package.json

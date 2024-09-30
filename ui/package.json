@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test"
   },
@@ -28,7 +28,8 @@
     "redux-actions": "2.6.5",
     "redux-logger": "3.0.6",
     "redux-promise-middleware": "6.1.2",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "yup": "^1.4.0"
   },
   "browserslist": {
     "production": [
@@ -176,5 +177,8 @@
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn"
     }
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
